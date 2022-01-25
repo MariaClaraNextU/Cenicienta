@@ -1,0 +1,183 @@
+RIP
+
+IPV6
+ipv6 unicast-routing
+ipv6 router rip RIP-AS
+
+int g0/0
+ipv6 rip RIP-AS enable
+int s0/0/0
+ipv6 rip RIP-AS enable
+
+IPV4
+router rip
+ version 2
+ network 192.168.1.0
+ network 200.20.1.0
+ network 200.20.2.0
+ no auto-summary
+
+
+EIGRP (usa RTP) - 90
+
+Costo:((10 000 000/AB) + del) * 256
+
+IPV6
+Branch-1(config)# ipv6 unicast-routing
+Branch-1(config)# ipv6 router eigrp 100
+Branch-1(config-rtr)# eigrp router-id 1.1.1.1
+no shut
+
+Branch-1(config)# int s0/0/0
+Branch-1(config-if)# ipv6 eigrp 100
+Branch-1(config-if)# int g0/0
+Branch-1(config-if)# ipv6 eigrp 100
+
+Branch-1(config)# ipv6 router eigrp 100 
+Branch1(config-rtr)# passive-interface g0/0 
+Branch1(config-rtr)# passive-interface g0/1
+
+
+IPV4
+Router(config)#router eigrp 4
+Router(config-router)#eigrp router-id 3.3.3.3
+Router(config-router)#net 192.168.3.0 0.0.0.255
+Router(config-router)#net 200.20.3.0 0.0.0.3
+
+
+OSPF - 110
+
+Costo: 10^8/AB
+
+IPV6
+Router(config)#ipv6 router ospf 6
+Router(config-rtr)#router-id 1.1.1.1
+Router(config-rtr)#exit
+
+Router(config)#int g0/0
+Router(config-if)#ipv6 ospf 6 area 0
+Router(config-if)#int s0/0/0
+Router(config-if)#ipv6 ospf 6 area 0
+Router(config-if)#int s0/0/1
+Router(config-if)#ipv6 ospf 6 area 0
+
+IPV4
+
+Router(config)#router ospf 4
+Router(config-router)#router-id 1.1.1.1
+Router(config-router)#net 192.168.2.0 0.0.0.255 area 0
+Router(config-router)#net 200.20.1.0 0.0.0.3 area 0
+
+REDISTRIBUCION
+
+EIGRP
+ipv6 router eigrp 1
+redistribute ospf/rip... 20 metric(eigrp que estoy trabajando) - ancho de banda - delay - reliebility (255 si es 100% confiable y que va a estar operativo, poner 255) - carga (100, es normal) - MTU (siempre 1500)
+del enlace que conecta al router destino
+
+Router(config)#ipv6 router eigrp 100
+Router(config-rtr)#redistribute ospf 6 metric 1544 20000 255 100 1500
+
+OSPF
+ipv6 router ospf 20
+redistribute eigrp 1 metric (ospf que estoy trabajando) - sumatoria enlaces  
+TABLA DE COSTOS 
+Sumatoria de enlaces
+
+Router(config)#ipv6 router ospf 6
+Router(config-rtr)#redistribute eigrp 100 metric 130
+
+
+VOIP
+
+Router(config)#ip dhcp pool VOIP 
+Router(dhcp-config)#net 192.168.1.0 255.255.255.0
+Router(dhcp-config)#default-router 192.168.1.2
+Router(dhcp-config)#option 150 ip 192.168.1.2
+
+Router(config)#telephony-service 
+Router(config-telephony)#max-ephones 4
+Router(config-telephony)#max-dn 4
+Router(config-telephony)#ip source-address 192.168.1.2 port 2000
+
+Switch
+Switch(config)#int f0/1
+Switch(config-if)#switchport voice vlan 1
+Switch(config-if)#switchport mode access
+
+DIAL-PEER
+Router(config)#dial-peer voice 1 voip
+Router(config-dial-peer)#destination-pattern 2...
+Router(config-dial-peer)#session target ipv4:192.168.2.2
+
+
+STP
+Definir ROOT
+spanning-tree vlan 1 - 1,5,7 - 3-8 root
+spanning-tree vlan 1 - 1,5,7 - 3-8 priority 0
+
+en todos los equipos 
+spanning-tree mode rapid-pvst -RAPID SPA TREE
+spanning-tree portfast  -  PORTFAST
+
+ETHERCHANNEL
+JUNTAR VARIOS ENLACES PARA AUMENTAR EL ANCHO DE BANDA
+
+PAgP
+channel-group 1 mode desirable 
+inicia la negociacion de la interfaz
+channel-group 1 mode auto
+responde las solicitudes de negociacion
+
+LAcP
+channel-group 2 mode active
+inicia la negociacion de la interfaz
+channel-group 1 mode passive
+responde las solicitudes de negociacion
+
+----------------------------------------------
+Nombres a los routers, switch, pcs todo
+DNS de CEDIA
+VLANS en las sedes
+Capturas de las cedes/Switchs
+Acabar DIAL Plan
+FAST PORT
+
+DHCP IPV6 VLANS
+Correo
+DNS VLANS IPV4
+
+
+Etherchannel de 2 enlaces nada más
+
+QUITAR TRONCAL
+CONFIGURAR
+PONER TRONCAL
+
+
+--------------------------------------------------------------------------
+canario es pájaro y es amarillo
+canario puede cantar
+piolín es un canario
+
+pájaro puede volar
+pájaro tiene alas
+pájaro pone huevos
+pájaro es un animal
+
+animal come alimentos
+animal puede respirar
+animal tien piel
+
+persona es un animal
+persona tiene piernas y brazos
+persona es carnívoro e inteligente
+
+
+
+
+
+
+
+
+
